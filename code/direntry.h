@@ -1,6 +1,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <errno.h>
+#include <iostream>
 
 const int IS_DIR_FLAG = 1, IS_FILE_FLAG = 2;
 
@@ -15,15 +17,33 @@ char current_dir[FILENAME_MAX];
   #define GetCurrentDir getcwd
 #endif
 
+int get_last_error () {
+  return errno;
+}
+
+int currentIndex = 0;
+char * currentPath;
+
+int get_path(){
+  if(currentPath[currentIndex]){
+    return (int)currentPath[currentIndex++];
+  }else {
+    currentIndex = 0;
+    return -1;
+  }
+}
+
 int load_dir (char * path) {
   struct dirent *pent;
   struct stat statbuf1;
 //Open current directory
+currentPath = path;
+currentIndex = 0;
 pdir = opendir(path);
 if (!pdir) {
-return 0; //Didn't open
+  return 0; //Didn't open
 }
-return -1;
+  return -1;
 }
 
 int has_next_entry () {
