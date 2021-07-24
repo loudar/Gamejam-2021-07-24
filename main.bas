@@ -51,7 +51,7 @@ SCREEN _NEWIMAGE(720, 405, 32)
 REDIM SHARED mouse AS mouse
 REDIM SHARED AS _FLOAT centerx, centery, levelprogress, prevlp
 REDIM SHARED AS INTEGER lockmouse, gamestate, leveltreshhold, eventState
-REDIM SHARED AS _UNSIGNED _INTEGER64 level, score, happiness, finalscore, maxHappiness, counter
+REDIM SHARED AS _UNSIGNED _INTEGER64 level, score, happiness, finalscore, maxHappiness, counter, smoke
 REDIM SHARED AS STRING spriteFiles(0), mapFiles(0), nothing(0), activeSprites(0), activeTask
 REDIM SHARED AS _BYTE eventRunning
 REDIM SHARED AS DOUBLE startTime, currentTime
@@ -72,7 +72,7 @@ DO
     ' controls + vars
     checkKeys
     checkMouse
-    checkRandomEvents
+    checkTimedEvents
     decreaseHappiness
 
     ' drawing
@@ -84,15 +84,13 @@ DO
     _LIMIT 60
 LOOP
 
-SUB checkRandomEvents
-    IF eventRunning > 0 THEN
-        updateRandomEvent
-        EXIT SUB
-    END IF
+SUB checkTimedEvents
     eventChance = 0.009
     roll = RND
-    IF roll < eventChance THEN
+    IF roll < eventChance AND eventRunning = 0 THEN
         startRandomEvent
+    ELSEIF eventRunning > 0 THEN
+        updateRandomEvent
     END IF
     IF roll < 0.0005 THEN
         DO: i = i + 1
@@ -104,6 +102,20 @@ SUB checkRandomEvents
                 sprites(i).name = "2zbackground2"
             END IF
         LOOP UNTIL i = UBOUND(sprites)
+    END IF
+    IF smoke >= 100 THEN
+        smoke = 0
+        DO: i = i + 1
+            IF sprites(i).name = "2cigarette1" THEN
+                sprites(i).handle = _LOADIMAGE("data\sprites\2cigarette2.png", 32)
+                sprites(i).name = "2cigarette2"
+            ELSEIF sprites(i).name = "2cigarette2" THEN
+                sprites(i).handle = _LOADIMAGE("data\sprites\2cigarette1.png", 32)
+                sprites(i).name = "2cigarette1"
+            END IF
+        LOOP UNTIL i = UBOUND(sprites)
+    ELSE
+        smoke = smoke + 1
     END IF
 END SUB
 
