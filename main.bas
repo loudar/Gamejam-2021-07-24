@@ -56,7 +56,7 @@ REDIM SHARED AS STRING spriteFiles(0), mapFiles(0), nothing(0), activeSprites(0)
 REDIM SHARED AS _BYTE eventRunning
 REDIM SHARED AS DOUBLE startTime, currentTime
 leveltreshhold = 20
-maxHappiness = 20
+maxHappiness = 30
 
 REDIM SHARED AS LONG font_normal, font_big, font_small
 loadFonts
@@ -89,16 +89,27 @@ SUB checkRandomEvents
         updateRandomEvent
         EXIT SUB
     END IF
-    eventChance = 0.01
+    eventChance = 0.009
     roll = RND
     IF roll < eventChance THEN
         startRandomEvent
+    END IF
+    IF roll < 0.0005 THEN
+        DO: i = i + 1
+            IF sprites(i).name = "2zbackground2" THEN
+                sprites(i).handle = _LOADIMAGE("data\sprites\2zbackground1.png", 32)
+                sprites(i).name = "2zbackground1"
+            ELSEIF sprites(i).name = "2zbackground1" THEN
+                sprites(i).handle = _LOADIMAGE("data\sprites\2zbackground2.png", 32)
+                sprites(i).name = "2zbackground2"
+            END IF
+        LOOP UNTIL i = UBOUND(sprites)
     END IF
 END SUB
 
 SUB decreaseHappiness
     counter = counter + 1
-    IF counter >= 75 AND happiness > 0 THEN
+    IF counter >= 50 AND happiness > 0 THEN
         counter = 0
         happiness = happiness - 1
     END IF
@@ -112,18 +123,18 @@ SUB updateRandomEvent
         eventState = eventState + 1
         SELECT CASE eventRunning
             CASE 1
-                IF eventState = 100 THEN
+                IF eventState = 50 THEN
                     increaseScore 5
                     changeTask
                     resetRandomEvent
                 END IF
             CASE 2
-                IF eventState = 50 THEN
-                    increaseHappiness 5
+                IF eventState = 20 THEN
+                    increaseHappiness 10
                     resetRandomEvent
                 END IF
             CASE 3
-                IF eventState = 50 THEN
+                IF eventState = 20 THEN
                     increaseHappiness 5
                     resetRandomEvent
                 END IF
@@ -214,6 +225,7 @@ END SUB
 
 SUB increaseHappiness (value AS INTEGER)
     happiness = happiness + value
+    IF happiness > maxHappiness THEN happiness = maxHappiness
 END SUB
 
 SUB checkMouse
@@ -440,7 +452,7 @@ SUB displaySpriteImage (this AS sprite, scale)
     IF this.handle < -1 THEN
         _PUTIMAGE (this.coord.x, this.coord.y)-(this.coord.x + (this.coord.w * scale), this.coord.y + (this.coord.h * scale)), this.handle
 
-        IF this.name = "2zbackground" THEN
+        IF MID$(this.name, 1, 12) = "2zbackground" THEN
             progressheight = 10
             levelprogress = (score MOD leveltreshhold) / leveltreshhold
             displayProgress this.coord.x + 10, (this.coord.y + (this.coord.h * 0.28)) - progressheight, this.coord.w * 0.33, progressheight, levelprogress, "h"
@@ -452,14 +464,14 @@ SUB displaySpriteImage (this AS sprite, scale)
 END SUB
 
 SUB displayUI
-    REDIM workingHours AS STRING
+    REDIM AS STRING workingHours
     COLOR col&("ui"), col&("t")
     workingHours = lst$(INT(TIMER - startTime))
     IF workingHours = "69" OR workingHours = "420" OR workingHours = "1337" THEN workingHours = ";)"
     _PRINTSTRING (getRow(1), getColumn(1)), "You have been working for " + workingHours + " hours."
     _PRINTSTRING (getRow(1), getColumn(3)), "We are proud of you!"
     IF eventState > 0 THEN
-        loadSize = 50
+        loadSize = 30
         loadState = eventState MOD loadSize
         IF loadState <= 4 THEN
             _PRINTSTRING (getRow(1), getColumn(5)), "Completing task."
@@ -473,6 +485,18 @@ SUB displayUI
     IF happinessFactor > 1 THEN happinessFactor = 1
     IF happinessFactor < 0 THEN happinessFactor = 0
     LINE (_WIDTH - 10, _HEIGHT - 5 - ((_HEIGHT - 10) * happinessFactor))-(_WIDTH - 5, _HEIGHT - 5), _RGBA(161, 255, 11, 255), BF
+    SELECT CASE happinessFactor
+        CASE IS < 0.3
+            emojiFile = 3
+        CASE IS > 0.7
+            emojiFile = 1
+        CASE ELSE
+            emojiFile = 2
+    END SELECT
+    REDIM AS LONG emoji
+    emoji = _LOADIMAGE("data\sprites\emoji" + lst$(emojiFile) + ".png", 32)
+    emojiScale = 0.5
+    _PUTIMAGE (_WIDTH - 20 - (_WIDTH(emoji) * emojiScale), 10)-(_WIDTH - 20, 10 + (_HEIGHT(emoji) * emojiScale)), emoji
 END SUB
 
 FUNCTION getRow (row AS _INTEGER64)

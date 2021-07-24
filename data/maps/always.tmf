@@ -1,6 +1,6 @@
 spriteName=1desk;x=center;y=bottom;scale=9;visible=-1
 spriteName=2pc;x=center;y=40;scale=4;visible=-1
-spriteName=2zbackground;x=center;y=40;scale=4;visible=-1
+spriteName=2zbackground2;x=center;y=40;scale=4;visible=-1
 spriteName=2mouse;x=250;y=62;scale=4;visible=-1
 spriteName=2keyboard;x=200;y=80;scale=4;visible=-1
 spriteName=3light;x=85;y=-90;scale=10;visible=-1
