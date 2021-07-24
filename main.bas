@@ -588,28 +588,8 @@ SUB GetFileList (SearchDirectory AS STRING, DirList() AS STRING, FileList() AS S
             END IF
         LOOP UNTIL length = -1
         close_dir
-        'DO: i = i + 1
-        '    IF FileList(i) <> "" THEN
-        '        PRINT FileList(i)
-        '    END IF
-        'LOOP UNTIL i = UBOUND(FileList)
-        'DO
-        '    current_char = get_path
-        '    IF current_char <> -1 THEN
-        '        PRINT CHR$(current_char);
-        '    END IF
-        'LOOP WHILE current_char <> -1
-        'PRINT ""
-        '_DISPLAY
-        'SLEEP
     ELSE
         PRINT "Failed to load directory " + SearchDirectory2 + " with error: " + lst$(get_last_error)
-        'DO
-        '    current_char = get_path
-        '    IF current_char <> -1 THEN
-        '        PRINT CHR$(current_char);
-        '    END IF
-        'LOOP WHILE current_char <> -1
         _DISPLAY
         SLEEP
     END IF
