@@ -10,4 +10,4 @@ I used QB64 for the game mechanics and aesprite to create the sprites.
 # The gamejam
 
 Check out the monthly mini game jam here: http://berlinminijam.de/
-This was my third time participating in any game jam, and also this particular one and worked alone, not like in <a href=https://mariocake.itch.io/laser-bees-shooting-space-frogs>my first jam participation</a>.
+This was my third time participating in any game jam, and also this particular one and worked alone, not like in <a href=https://mariocake.itch.io/laser-bees-shooting-space-frogs>my first jam participation</a> or <a href=https://loudar.itch.io/vacuuflower>my second jam participation</a>.
