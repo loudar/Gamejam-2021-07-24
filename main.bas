@@ -93,7 +93,7 @@ SUB checkTimedEvents
         updateRandomEvent
     END IF
     IF roll < 0.0005 THEN
-        DO: i = i + 1
+        i = 0: DO: i = i + 1
             IF sprites(i).name = "2zbackground2" THEN
                 sprites(i).handle = _LOADIMAGE("data\sprites\2zbackground1.png", 32)
                 sprites(i).name = "2zbackground1"
@@ -105,7 +105,7 @@ SUB checkTimedEvents
     END IF
     IF smoke >= 100 THEN
         smoke = 0
-        DO: i = i + 1
+        i = 0: DO: i = i + 1
             IF sprites(i).name = "2cigarette1" THEN
                 sprites(i).handle = _LOADIMAGE("data\sprites\2cigarette2.png", 32)
                 sprites(i).name = "2cigarette2"
@@ -129,7 +129,7 @@ END SUB
 
 SUB updateRandomEvent
     i = VAL(activeSprites(1))
-    IF mouse.left AND inBounds(mouse.coord, sprites(i).coord, -5) THEN clickCondition = -1
+    IF mouse.left AND inBounds(mouse.coord, sprites(i).coord, -5) THEN clickCondition = -1 ELSE clickCondition = 0
     IF clickCondition OR eventState > 0 THEN
         'IF clickCondition then changeSprite
         eventState = eventState + 1
@@ -467,10 +467,10 @@ SUB displaySpriteImage (this AS sprite, scale)
         IF MID$(this.name, 1, 12) = "2zbackground" THEN
             progressheight = 10
             levelprogress = (score MOD leveltreshhold) / leveltreshhold
-            displayProgress this.coord.x + 10, (this.coord.y + (this.coord.h * 0.28)) - progressheight, this.coord.w * 0.33, progressheight, levelprogress, "h"
+            displayProgress this.coord.x + 10, (this.coord.y + (this.coord.h * 0.35)) - progressheight, this.coord.w * 0.33, progressheight, levelprogress, "h"
             _FONT font_small
-            _PRINTSTRING (this.coord.x + 10, (this.coord.y + (this.coord.h * 0.28)) + 5), "Your task:"
-            _PRINTSTRING (this.coord.x + 10, (this.coord.y + (this.coord.h * 0.28)) + 8 + _FONTHEIGHT), activeTask
+            _PRINTSTRING (this.coord.x + 10, (this.coord.y + (this.coord.h * 0.35)) + 5), "Your task:"
+            _PRINTSTRING (this.coord.x + 10, (this.coord.y + (this.coord.h * 0.35)) + 8 + _FONTHEIGHT), activeTask
         END IF
     END IF
 END SUB
